@@ -22,7 +22,7 @@
 #include <sourcemod>
 #include <smlib>
 
-#define VERSION "0.4"
+#define VERSION "0.5"
 
 #define TEAM_WHOKNOWS	0
 #define TEAM_SPECTATOR	1
@@ -113,11 +113,13 @@ public Action:ConsoleJoin(client, const String:command[], argc)
 		GetCmdArg(1, arg, sizeof(arg));
 		if(StringToInt(arg)==TEAM_SPECTATOR){
 			spectate(client);
+			return Plugin_Handled;
 		} else {
 			return Plugin_Continue;
 		}
 	} else if(StrEqual(command, "spectate")){
 		spectate(client);
+		return Plugin_Handled;
 
 	}
 	return Plugin_Continue;
@@ -134,9 +136,9 @@ spectate(client)
 			movespec_delay > 2.0 ? Client_PrintToChat(client, true, "[{G}Spectator{N}] You will be moved to spectate within %0.1f seconds", movespec_delay):0;
 			return;
 		}
+	} else {
+		ChangeClientTeam(client, TEAM_SPECTATOR);	// In HL2MP ChangeClientTeam seems to ONLY work for TEAM_SPECTATOR. 
 	}
-
-	ChangeClientTeam(client, TEAM_SPECTATOR);	// In HL2MP ChangeClientTeam seems to ONLY work for TEAM_SPECTATOR. 
 }
 
 
